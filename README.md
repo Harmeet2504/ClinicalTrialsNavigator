@@ -4,7 +4,7 @@ A lightweight GenAI-powered navigator for exploring pediatric clinical trials us
 # Installations: Using Ollama, LangChain with a Virtual Environment
 1. Install Ollama (System-wide)
 Ollama runs as a background service, not inside virtual environment. Install it once on your system:
-`curl -fsSL https://ollama.com/install.sh | sh
+`curl -fsSL https://ollama.com/install.sh | sh`
 
 2. Pull a Model
 After installation, pull a model like Mistral or Phi-3 or llama3:
