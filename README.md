@@ -8,8 +8,8 @@ Ollama runs as a background service, not inside virtual environment. Install it 
 
 2. Pull a Model
 After installation, pull a model like Mistral or Phi-3 or llama3:
-`ollama pull mistral
+`ollama pull mistral`
 
 3. Activate Your Virtual Environment and then install LangChain and the Ollama integration:
-`conda activate env_name
-`pip install langchain langchain-community
+`conda activate env_name`
+`pip install langchain langchain-community`
