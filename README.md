@@ -1,6 +1,16 @@
 # ClinicalTrialsNavigator
 A lightweight GenAI-powered navigator for exploring pediatric clinical trials using natural language. Combines structured filtering with LLM-assisted search to make trial discovery accessible for families and caregivers.
 
+## Fetching Clinical Trials Data
+
+This project uses the ClinicalTrials.gov v2 API to fetch pediatric brain tumor trials updated in the last 12 months.
+
+To fetch and parse your own data:
+
+```bash
+python ingest/test_parse.py
+```
+
 # Installations: Using Ollama, LangChain with a Virtual Environment
 1. Install Ollama (System-wide)
 Ollama runs as a background service, not inside virtual environment. Install it once on your system:
