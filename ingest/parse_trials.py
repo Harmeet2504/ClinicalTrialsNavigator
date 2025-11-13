@@ -1,37 +1,74 @@
-# ingest/parse_trials.py
+import json
 
-def parse_trials(data):
-    """
-    Function to extract clean trial records from the raw API response
-    """
-    trials = []
+def parse_trial(study):
+    ps = study.get("protocolSection", {})
+    id_mod = ps.get("identificationModule", {})
+    status_mod = ps.get("statusModule", {})
+    desc_mod = ps.get("descriptionModule", {})
+    cond_mod = ps.get("conditionsModule", {})
+    elig_mod = ps.get("eligibilityModule", {})
+    loc_mod = ps.get("contactsLocationsModule", {})
+    arms_mod = ps.get("armsInterventionsModule", {})
+    outcomes_mod = ps.get("outcomesModule", {})
+    refs_mod = ps.get("referencesModule", {})
 
-    for study in data.get("studies", []):
-        protocol = study.get("protocolSection", {})
-        id_module = protocol.get("identificationModule", {})
-        status_module = protocol.get("statusModule", {})
-        eligibility = protocol.get("eligibilityModule", {})
-        conditions = protocol.get("conditionsModule", {})
-        locations = protocol.get("contactsLocationsModule", {}).get("locations", [])
+    # Location (first site only)
+    loc = loc_mod.get("locations", [{}])[0]
+    geo = loc.get("geoPoint", {})
 
-        loc = locations[0] if locations else {}
-        geo = loc.get("geoPoint", {}) if isinstance(loc, dict) else {}
+    # Interventions
+    interventions = arms_mod.get("interventions", [])
+    intervention_names = [i.get("name", "") for i in interventions]
+    intervention_descriptions = [i.get("description", "") for i in interventions]
 
-        trial_record = {
-            "nct_id": id_module.get("nctId"),
-            "brief_title": id_module.get("briefTitle"),
-            "status": status_module.get("overallStatus"),
-            "condition": ", ".join(conditions.get("conditions", [])),
-            "min_age": eligibility.get("minimumAge"),
-            "max_age": eligibility.get("maximumAge"),
-            "location_name": loc.get("facility") if isinstance(loc, dict) else None,
-            "city": loc.get("city") if isinstance(loc, dict) else None,
-            "state": loc.get("state") if isinstance(loc, dict) else None,
-            "country": loc.get("country") if isinstance(loc, dict) else None,
-            "latitude": geo.get("lat"),
-            "longitude": geo.get("lon")
-        }
+    # Arm groups
+    arm_groups = arms_mod.get("armGroups", [])
+    arm_labels = [a.get("label", "") for a in arm_groups]
+    arm_descriptions = [a.get("description", "") for a in arm_groups]
 
-        trials.append(trial_record)
+    # Outcomes
+    primary_outcomes = outcomes_mod.get("primaryOutcomes", [])
+    outcome_measures = [o.get("measure", "") for o in primary_outcomes]
+    outcome_descriptions = [o.get("description", "") for o in primary_outcomes]
+    outcome_timeframes = [o.get("timeFrame", "") for o in primary_outcomes]
 
-    return trials
+    # References
+    references = refs_mod.get("references", [])
+    pubmed_ids = [r.get("pmid", "") for r in references]
+    citations = [r.get("citation", "") for r in references]
+
+    return {
+        "nct_id": id_mod.get("nctId", ""),
+        "brief_title": id_mod.get("briefTitle", ""),
+        "status": status_mod.get("overallStatus", ""),
+        "why_stopped": status_mod.get("whyStopped", ""),
+        "start_date": status_mod.get("startDateStruct", {}).get("date", ""),
+        "completion_date": status_mod.get("completionDateStruct", {}).get("date", ""),
+        "condition": ", ".join(cond_mod.get("conditions", [])),
+        "keywords": ", ".join(cond_mod.get("keywords", [])),
+        "brief_summary": desc_mod.get("briefSummary", ""),
+        "detailed_description": desc_mod.get("detailedDescription", ""),
+        "eligibility": elig_mod.get("eligibilityCriteria", ""),
+        "min_age": elig_mod.get("minimumAge", ""),
+        "max_age": elig_mod.get("maximumAge", ""),
+        "sex": elig_mod.get("sex", ""),
+        "healthy_volunteers": elig_mod.get("healthyVolunteers", False),
+        "location_name": loc.get("facility", ""),
+        "city": loc.get("city", ""),
+        "state": loc.get("state", ""),
+        "country": loc.get("country", ""),
+        "latitude": geo.get("lat", ""),
+        "longitude": geo.get("lon", ""),
+        "intervention_names": ", ".join(intervention_names),
+        "intervention_descriptions": "\n\n".join(intervention_descriptions),
+        "arm_labels": ", ".join(arm_labels),
+        "arm_descriptions": "\n\n".join(arm_descriptions),
+        "outcome_measures": ", ".join(outcome_measures),
+        "outcome_descriptions": "\n\n".join(outcome_descriptions),
+        "outcome_timeframes": ", ".join(outcome_timeframes),
+        "pubmed_ids": ", ".join(pubmed_ids),
+        "citations": "\n\n".join(citations)
+    }
+
+def parse_trials(raw_trials):
+    return [parse_trial(study) for study in raw_trials]
