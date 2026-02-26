@@ -8,7 +8,7 @@ OncoMatch AI is an intelligent reasoning system designed to bridge the gap betwe
 The system follows a modular, security-first pipeline as visualized in our process diagram:
 
 <p align="center">
-<img src="img/workflow.png" width="1000" height=1000" border="10"/>
+<img src="img/workflow.png" width="1000" height=700" border="10"/>
 </p>
 
 **Zero-Trust Security & Guardrails**
