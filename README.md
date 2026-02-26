@@ -6,9 +6,15 @@ OncoMatch AI is an intelligent reasoning system designed to bridge the gap betwe
 
 ## System Architecture
 The system follows a modular, security-first pipeline as visualized in our process diagram:
+
+<p align="center">
+<img src="img/workflow.png" width="100" height="100" border="10"/>
+</p>
+
 **Zero-Trust Security & Guardrails**
 + PII/PHI Redaction: Automatic stripping of personally identifiable information before data reaches the LLM.
 + Topic Filtering: Hard-coded constraints to prevent non-clinical queries and prompt injection.
+
 **The Agentic Orchestration Loop (Core Engine)**
 The heart of the system is an autonomous reasoning agent operating on a Thought → Action → Observation (TAO) loop:
 - Thought: The LLM analyzes the patient query (e.g., "Stage III NSCLC") and determines what missing data points (biomarkers, age, location) are needed.
