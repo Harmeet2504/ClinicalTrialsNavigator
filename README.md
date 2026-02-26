@@ -14,14 +14,14 @@ The heart of the system is an autonomous reasoning agent operating on a Thought 
 - Thought: The LLM analyzes the patient query (e.g., "Stage III NSCLC") and determines what missing data points (biomarkers, age, location) are needed.
 - Action: The agent utilizes a Model Context Protocol (MCP) connector to perform live API calls to ClinicalTrials.gov.
 - Observation: The agent ingests raw JSON data from the trial registry and iterates if further refinement is required.
-- ** Hybrid Retrieval Strategy (RAG)**
+**Hybrid Retrieval Strategy (RAG)**
 - Live API Retrieval: Fetches real-time trial statuses, recruitment updates, and location-based data.
 - Vector Database RAG: Utilizes a vector store (e.g., ChromaDB/SQLit-vss) containing high-density Trial Protocol - Documents. This allows the agent to check deep inclusion/exclusion criteria that are often buried in 100+ page PDFs.
-- **Clinical Verification & Safety**
+**Clinical Verification & Safety**
 - Multi-Agent Verification: A secondary "Critic" agent cross-references the synthesized output against the source trial NCT IDs to eliminate hallucinations.
 - Traceable Citations: Every claim made to the user is backed by a direct link to the official study record.
 
-**-Ethical & Medical Guardrails**
+**Ethical & Medical Guardrails**
 - Non-Diagnostic: The system is strictly an informational tool. It does not provide medical advice or treatment recommendations.
 - Human-in-the-Loop: Designed to generate a "Clinical Trial Summary Report" that a patient can take directly to their oncologist for professional review.
 
