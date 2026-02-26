@@ -62,3 +62,7 @@ and type a question "Eg. What is the currency of France?"
 3. Activate Your Virtual Environment and then install LangChain and the Ollama integration:
 `conda activate env_name`
 `pip install langchain langchain-community`
+
+
+
+###### *This work is under continuous development at ArrayGen, and updates are published periodically.*
